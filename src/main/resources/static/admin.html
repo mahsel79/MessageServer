@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8d7da;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 600px;
+        }
+        h2 {
+            color: #dc3545;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #dc3545;
+            color: white;
+        }
+        button {
+            padding: 7px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .block-btn {
+            background: red;
+            color: white;
+        }
+        .unblock-btn {
+            background: green;
+            color: white;
+        }
+        .logout-btn {
+            margin-top: 15px;
+            background: #007BFF;
+            color: white;
+            padding: 10px;
+        }
+        #message {
+            margin-top: 10px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Admin Dashboard</h2>
+    <p>Welcome, <span id="admin-email"></span></p>
+    <h3>Manage Users</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Email</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody id="users-table"></tbody>
+    </table>
+    <p id="message"></p>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+<script>
+    function checkAuth() {
+        const token = localStorage.getItem('jwt');
+        if (!token) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const payload = parseJwt(token);
+        if (payload.role !== 'admin') {
+            alert("Access Denied! Redirecting...");
+            window.location.href = 'user.html';
+            return;
+        }
+
+        document.getElementById('admin-email').innerText = payload.email;
+        fetchUsers();
+    }
+
+    function parseJwt(token) {
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function fetchUsers() {
+        fetch('/api/users', { headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt')}` }})
+            .then(res => res.json())
+            .then(users => {
+                const table = document.getElementById('users-table');
+                table.innerHTML = '';
+                users.forEach(email => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${email}</td>
+                        <td>
+                            <button id="block-${email}" class="block-btn" onclick="toggleBlock('${email}', true)">Block</button>
+                            <button id="unblock-${email}" class="unblock-btn" onclick="toggleBlock('${email}', false)" style="display: none;">Unblock</button>
+                        </td>
+                    `;
+                    table.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching users:', error);
+                document.getElementById('message').innerText = 'Error loading users!';
+            });
+    }
+
+    function toggleBlock(email, block) {
+        fetch(`/api/admin/block?email=${encodeURIComponent(email)}&block=${block}`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt')}` }
+        })
+            .then(response => response.text())
+            .then(text => {
+                alert(text);
+                document.getElementById(`block-${email}`).style.display = block ? 'none' : 'inline-block';
+                document.getElementById(`unblock-${email}`).style.display = block ? 'inline-block' : 'none';
+            })
+            .catch(error => {
+                console.error('Error blocking user:', error);
+                document.getElementById('message').innerText = 'Failed to block/unblock user!';
+            });
+    }
+
+    function logout() {
+        localStorage.removeItem('jwt');
+        window.location.href = 'login.html';
+    }
+
+    checkAuth();
+</script>
+</body>
+</html>

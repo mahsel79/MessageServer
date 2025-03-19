@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+</head>
+<body>
+<h2>Welcome, <span id="user-email"></span></h2>
+<h3>Your Messages</h3>
+<ul id="messages-list"></ul>
+
+<h3>Send a Message</h3>
+<input type="email" id="recipient" placeholder="Recipient Email">
+<input type="text" id="message" placeholder="Your Message">
+<button onclick="sendMessage()">Send</button>
+
+<script>
+    function checkAuth() {
+        const token = localStorage.getItem('jwt');
+        if (!token) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        fetch('/api/messages', { headers: { 'Authorization': `Bearer ${token}` }})
+            .then(res => res.json())
+            .then(messages => {
+                const list = document.getElementById('messages-list');
+                list.innerHTML = '';
+                messages.forEach(msg => {
+                    list.innerHTML += `<li><strong>${msg.sender}</strong>: ${msg.message}</li>`;
+                });
+            });
+    }
+
+    function sendMessage() {
+        const recipient = document.getElementById('recipient').value;
+        const message = document.getElementById('message').value;
+        fetch('/api/messages', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `recipient=${encodeURIComponent(recipient)}&message=${encodeURIComponent(message)}`
+        })
+            .then(response => response.text())
+            .then(text => {
+                alert(text);
+                checkAuth();
+            });
+    }
+
+    checkAuth();
+</script>
+</body>
+</html>
