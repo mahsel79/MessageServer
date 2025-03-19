@@ -34,6 +34,10 @@ public class LoggerUtil {
     }
 
     public static void log(LogLevel level, String message) {
+        log(level, message, null);
+    }
+
+    public static void log(LogLevel level, String message, String username) {
         String timestamp = LocalDateTime.now().format(formatter);
         String logEntry = String.format("[%s] %s - %s", level, timestamp, message);
 
@@ -47,6 +51,31 @@ public class LoggerUtil {
         } catch (IOException e) {
             System.err.println("Failed to write log: " + e.getMessage());
         }
+    }
+
+    // Specific logging methods
+    public static void logFailedLogin(String username, String ipAddress) {
+        log(LogLevel.WARN, String.format("Failed login attempt from IP: %s", ipAddress), username);
+    }
+
+    public static void logSuccessfulLogin(String username, String ipAddress) {
+        log(LogLevel.INFO, String.format("Successful login from IP: %s", ipAddress), username);
+    }
+
+    public static void logUserListRequest(String username) {
+        log(LogLevel.INFO, "User list requested", username);
+    }
+
+    public static void logMessageListRequest(String username) {
+        log(LogLevel.INFO, "Message list requested", username);
+    }
+
+    public static void logMessageSent(String sender, String recipient) {
+        log(LogLevel.INFO, String.format("Message sent from %s to %s", sender, recipient), sender);
+    }
+
+    public static void logUserLogout(String username) {
+        log(LogLevel.INFO, "User logged out", username);
     }
 
     private static void rotateLogsIfNeeded() throws IOException {
