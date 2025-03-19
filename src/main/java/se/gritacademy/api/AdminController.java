@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.gritacademy.service.UserService;
 import se.gritacademy.util.JwtUtil;
+import se.gritacademy.util.LoggerUtil;
 import io.jsonwebtoken.Claims;
 
 @RestController
@@ -15,18 +16,24 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+    /** Block/Unblock a user (Admin only) */
     @PostMapping("/block")
     public ResponseEntity<String> blockUser(@RequestHeader("Authorization") String token,
                                             @RequestParam String email,
                                             @RequestParam boolean block) {
         Claims claims = JwtUtil.validateToken(token);
         if (claims == null || !claims.get("role", String.class).equals("admin")) {
+            LoggerUtil.log("Unauthorized block/unblock attempt");
             return ResponseEntity.status(403).body("Access denied");
         }
 
         boolean success = userService.toggleBlockUser(email, block);
-        return success
-                ? ResponseEntity.ok(block ? "User blocked" : "User unblocked")
-                : ResponseEntity.status(404).body("User not found");
+        if (success) {
+            LoggerUtil.log("Admin " + claims.getSubject() + " " + (block ? "blocked" : "unblocked") + " user: " + email);
+            return ResponseEntity.ok(block ? "User blocked" : "User unblocked");
+        } else {
+            LoggerUtil.log("Failed block/unblock attempt for user: " + email);
+            return ResponseEntity.status(404).body("User not found");
+        }
     }
 }
