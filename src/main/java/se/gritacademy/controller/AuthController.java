@@ -3,6 +3,8 @@ package se.gritacademy.controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import se.gritacademy.util.LoggerUtil;
+import se.gritacademy.model.UserInfo;
+import se.gritacademy.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -10,6 +12,12 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
 public class AuthController {
+
+    private final UserService userService;
+
+    public AuthController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(
@@ -19,8 +27,7 @@ public class AuthController {
         
         String ipAddress = getClientIp(request);
         
-        // TODO: Add actual authentication logic
-        boolean loginSuccess = true; // Placeholder
+        boolean loginSuccess = userService.authenticateUser(username, password).isPresent();
         
         if (loginSuccess) {
             LoggerUtil.logSuccessfulLogin(username, ipAddress);
@@ -47,5 +54,24 @@ public class AuthController {
             remoteAddr = request.getHeader("X-Forwarded-For");
         }
         return remoteAddr;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody UserInfo userInfo) {
+        // Password validation
+        String password = userInfo.getPassword();
+        String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{12,}$";
+        
+        if (!password.matches(passwordPattern)) {
+            return ResponseEntity.badRequest().body("Password must be at least 12 characters long and contain: " +
+                    "1 uppercase letter, 1 lowercase letter, 1 digit, and 1 special character");
+        }
+
+        try {
+            userService.registerUser(userInfo);
+            return ResponseEntity.ok("User registered successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
