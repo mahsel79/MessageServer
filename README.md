@@ -1,176 +1,160 @@
 # Message Server Application
 
-## Project Structure
+The **Message Server Application** is a secure Java web server designed to facilitate user-to-user messaging while implementing **strong security mechanisms** to prevent vulnerabilities like **unauthorized access, brute-force attacks, and data breaches**.
 
+📌 **Purpose**
+This project serves as an educational tool for developers to:
+- Understand secure coding practices in **Spring Boot** applications.
+- Implement **JWT authentication, password hashing, and message encryption**.
+- Learn about **rate limiting, logging, and API security best practices**.
+
+By working with this project, developers gain hands-on experience in **secure web development**.
+
+---
+
+## 🏗️ **Technologies Used**
+- **Java 17** – Backend implementation
+- **Spring Boot** – Web framework
+- **H2 Database** – In-memory database for temporary storage
+- **BCrypt** – Secure password hashing
+- **AES Encryption** – Secure message storage
+- **JJWT** – Secure JWT-based authentication
+- **Spring Security** – Role-based access control
+- **Postman/cURL** – API testing tools
+
+---
+
+## 📂 **Folder and File Structure**
 ```
-src/
-├── main/
-│   ├── java/
-│   │   └── se/
-│   │       └── gritacademy/
-│   │           ├── MessageServerApplication.java
-│   │           ├── api/
-│   │           │   ├── AdminController.java
-│   │           │   ├── MessageController.java
-│   │           │   └── UserController.java
-│   │           ├── controller/
-│   │           │   └── AuthController.java
-│   │           ├── model/
-│   │           │   ├── Message.java
-│   │           │   └── UserInfo.java
-│   │           ├── repository/
-│   │           │   ├── MessageRepository.java
-│   │           │   └── UserRepository.java
-│   │           ├── service/
-│   │           │   ├── AuthService.java
-│   │           │   ├── MessageService.java
-│   │           │   └── UserService.java
-│   │           └── util/
-│   │               ├── JwtUtil.java
-│   │               └── LoggerUtil.java
-│   ├── resources/
-│   │   ├── application.properties
-│   │   └── static/
-│   │       ├── admin.html
-│   │       ├── login.html
-│   │       ├── register.html
-│   │       └── user.html
-└── test/
-    └── java/
+MessageServerApplication/
+│── src/
+│   ├── main/
+│   │   ├── java/se/gritacademy/
+│   │   │   ├── MessageServerApplication.java   # Main Spring Boot application
+│   │   │   ├── api/
+│   │   │   │   ├── AdminController.java       # Handles admin actions
+│   │   │   │   ├── MessageController.java     # Handles messaging logic
+│   │   │   │   ├── UserController.java        # Manages user operations
+│   │   │   ├── controller/
+│   │   │   │   ├── AuthController.java        # Manages authentication
+│   │   │   ├── model/
+│   │   │   │   ├── Message.java               # Represents message entity
+│   │   │   │   ├── UserInfo.java              # Stores user info (email, role, hashed password)
+│   │   │   ├── repository/
+│   │   │   │   ├── MessageRepository.java     # Message data access
+│   │   │   │   ├── UserRepository.java        # User data access
+│   │   │   ├── service/
+│   │   │   │   ├── AuthService.java           # Handles authentication logic
+│   │   │   │   ├── MessageService.java        # Business logic for messages
+│   │   │   │   ├── UserService.java           # Manages user operations
+│   │   │   ├── util/
+│   │   │   │   ├── JwtUtil.java               # JWT management
+│   │   │   │   ├── LoggerUtil.java            # Application logging
+│   │   │   │   ├── EncryptionUtil.java        # AES encryption for messages
+│   │   │   │   ├── RateLimiter.java           # Prevents brute-force attacks
+│   │   ├── resources/
+│   │   │   ├── application.properties         # Configurations
+│   │   │   ├── static/
+│   │   │   │   ├── admin.html                 # Admin interface
+│   │   │   │   ├── login.html                 # Login page
+│   │   │   │   ├── register.html              # Registration page
+│   │   │   │   ├── user.html                  # User dashboard
+│── README.md                                  # Project documentation
 ```
 
-## Main Classes and Responsibilities
+---
 
-### Controllers
-- **AuthController**: Handles authentication endpoints (login, register, logout)
-- **MessageController**: Manages message-related operations (send, retrieve messages)
-- **UserController**: Handles user management operations
-- **AdminController**: Provides admin-specific functionality
+## 🚀 **Building and Running the Application**
 
-### Models
-- **Message**: Represents a message entity with sender, recipient, and content
-- **UserInfo**: Represents user information including email, password hash, and role
+### 🛠 1. Clone the Repository
+```bash
+git clone https://github.com/mahsel79/MessageServer.git  
+cd MessageServer
+```
 
-### Services
-- **AuthService**: Handles authentication logic
-- **MessageService**: Manages message-related business logic
-- **UserService**: Provides user management functionality
+### 🏗 2. Build and Run the Application
+```bash
+./mvnw spring-boot:run  
+```
+OR (if using Maven installed on your system)
+```bash
+mvn spring-boot:run  
+```
 
-### Repositories
-- **MessageRepository**: Data access layer for messages
-- **UserRepository**: Data access layer for users
+### 🌍 3. Access the Application
+- **Frontend:** Open [http://localhost:8080/](http://localhost:8080/) in a browser.
+- **API Endpoints:** Use **Postman** or **cURL** to interact with the backend.
 
-### Utilities
-- **JwtUtil**: Handles JWT token generation and validation
-- **LoggerUtil**: Provides logging functionality
+---
 
-## API Endpoints
+## 📡 **API Endpoints**
+### 🛠 **Authentication (/api)**
+| Endpoint       | HTTP Method | Description |
+|---------------|------------|-------------|
+| `/register`   | POST       | Register new user |
+| `/login`      | POST       | Authenticate user and return JWT |
+| `/logout`     | GET        | Logs out user (JWT invalidation not required) |
+| `/users`      | GET        | List all registered users |
 
-### Authentication (/api)
-- POST /register - Register new user
-  ```bash
-  curl -X POST http://localhost:8080/api/register \
-    -H "Content-Type: application/json" \
-    -d '{"email":"user@example.com","password":"securePassword123"}'
-  ```
+### ✉️ **Messages (/api/messages)**
+| Endpoint          | HTTP Method | Description |
+|------------------|------------|-------------|
+| `/messages`      | GET        | Retrieve all messages for logged-in user |
+| `/messages`      | POST       | Send a message to another user |
 
-- POST /login - User login
-  ```bash
-  curl -X POST http://localhost:8080/api/login \
-    -H "Content-Type: application/json" \
-    -d '{"email":"user@example.com","password":"securePassword123"}'
-  ```
+### 🔑 **Admin (/api/admin)**
+| Endpoint       | HTTP Method | Description |
+|---------------|------------|-------------|
+| `/block`      | POST       | Block/unblock a user |
 
-- GET /logout - User logout
-  ```bash
-  curl -X GET http://localhost:8080/api/logout \
-    -H "Authorization: Bearer <JWT_TOKEN>"
-  ```
+---
 
-- GET /users - List all users (requires authentication)
-  ```bash
-  curl -X GET http://localhost:8080/api/users \
-    -H "Authorization: Bearer <JWT_TOKEN>"
-  ```
-  Returns:
-  ```json
-  ["user1@example.com", "user2@example.com"]
-  ```
+## 🔒 **Security Features Implemented**
 
-### Messages (/api/messages)
-- GET / - Get messages for authenticated user
-  ```bash
-  curl -X GET http://localhost:8080/api/messages \
-    -H "Authorization: Bearer <JWT_TOKEN>"
-  ```
-  Returns:
-  ```json
-  [
-    {
-      "date": "2025-03-20T02:45:00Z",
-      "sender": "user1@example.com",
-      "message": "Hello there!"
-    },
-    {
-      "date": "2025-03-20T02:50:00Z", 
-      "sender": "user2@example.com",
-      "message": "How are you?"
-    }
-  ]
-  ```
+### ✅ **Authentication & Authorization**
+- **JWT authentication** ensures secure login/logout.
+- **Role-based access control** (admin/user roles).
 
-- POST / - Send message to another user
-  ```bash
-  curl -X POST http://localhost:8080/api/messages \
-    -H "Authorization: Bearer <JWT_TOKEN>" \
-    -H "Content-Type: application/json" \
-    -d '{"recipient":"user2@example.com","message":"Hello from user1!"}'
-  ```
+### ✅ **Password Security**
+- **BCrypt password hashing** prevents storing plaintext passwords.
+- **Password policy enforced** (min. 12 chars, uppercase, lowercase, digit, special char).
 
-### Admin (/api/admin)
-- [Admin-specific endpoints]
+### ✅ **Message Encryption**
+- **AES encryption** ensures messages are stored securely and decrypted only when needed.
 
-## Frontend Pages
-- login.html - User login interface
-- register.html - User registration interface
-- user.html - Main user interface
-- admin.html - Admin management interface
+### ✅ **Rate Limiting & Brute Force Protection**
+- **RateLimiter** restricts excessive login attempts.
 
-## Security Overview
+### ✅ **Logging & Auditing**
+- **LoggerUtil** records login attempts, message retrieval, and admin actions.
 
-### Authentication & Authorization
-- JWT-based authentication using JJWT library
-- Role-based access control (user_role, admin_role)
-- Secure password hashing using BCrypt
-- Token expiration and refresh mechanisms
+---
 
-### Key Security Dependencies
-1. **JJWT (Java JWT)**
-   - Provides secure JWT creation and validation
-   - Implements industry-standard JWT specifications
-   - Actively maintained with regular security updates
+## 🔥 **Security Vulnerabilities Addressed**
 
-2. **Spring Security**
-   - Comprehensive security framework for Spring applications
-   - Provides authentication, authorization, and protection against common vulnerabilities
-   - Integrates with other Spring components seamlessly
+### ❌ **SQL Injection (SQLi)**
+✅ **Fixed by using ORM (`JpaRepository`) instead of raw SQL queries.**
 
-3. **Jakarta Servlet API**
-   - Standardized web application security interfaces
-   - Provides secure request/response handling
-   - Enables proper session management and security context
+### ❌ **Cross-Site Scripting (XSS)**
+✅ **Sanitized user input to prevent JavaScript injection.**
 
-### Security Best Practices
-- All sensitive data is encrypted in transit (HTTPS)
-- Strong password policies enforced
-- Rate limiting implemented to prevent brute force attacks
-- Input validation and sanitization for all user inputs
-- Regular security audits and dependency updates
+### ❌ **Broken Authentication**
+✅ **Implemented JWT with expiration & signature verification.**
 
-### Threat Mitigation
-- Protection against common web vulnerabilities (XSS, CSRF, SQLi)
-- Secure session management
-- Proper error handling to prevent information leakage
-- Regular security testing and code reviews
+### ❌ **Sensitive Data Exposure**
+✅ **Passwords are stored securely with hashing.**
+✅ **Messages are encrypted before storage.**
 
-For detailed dependency analysis, see [SBOM_report.md](SBOM_report.md)
+---
+
+## 📌 **Next Steps**
+✔️ Implement **Spring Security** for enhanced access control.  
+✔️ Prevent **sending messages to blocked users**.  
+✔️ Add **admin user deletion functionality**.  
+✔️ Conduct **security penetration testing**.
+
+---
+
+## ⚠️ **Disclaimer**
+This project is for **educational purposes only**. Do not deploy this application in a **production environment** without removing vulnerabilities and performing security hardening.
+
