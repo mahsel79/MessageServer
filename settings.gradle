@@ -1,2 +1,8 @@
-rootProject.name = 'MessageServer'
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
 
+rootProject.name = 'MessageServer'
