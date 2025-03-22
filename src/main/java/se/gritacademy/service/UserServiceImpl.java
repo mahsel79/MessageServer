@@ -39,8 +39,11 @@ public class UserServiceImpl implements UserService {
     public Optional<UserInfo> authenticateUser(String email, String password) {
         Optional<UserInfo> userOptional = userRepository.findByEmail(email);
         if (userOptional.isPresent()) {
-            LoggerUtil.log("Successful login for user: " + email);
-            return userOptional;
+            UserInfo user = userOptional.get();
+            if (user.getPassword().equals(password)) {
+                LoggerUtil.log("Successful login for user: " + email);
+                return userOptional;
+            }
         }
         LoggerUtil.log("Failed login attempt for email: " + email);
         return Optional.empty();

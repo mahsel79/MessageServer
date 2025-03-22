@@ -17,11 +17,18 @@ public class AdminController {
     private UserService userService;
 
     /** Block/Unblock a user (Admin only) */
+    private final JwtUtil jwtUtil;
+
+    @Autowired
+    public AdminController(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
+
     @PostMapping("/block")
     public ResponseEntity<String> blockUser(@RequestHeader("Authorization") String token,
                                             @RequestParam String email,
                                             @RequestParam boolean block) {
-        Claims claims = JwtUtil.validateToken(token);
+        Claims claims = jwtUtil.validateToken(token);
         if (claims == null || !claims.get("role", String.class).equals("admin")) {
             LoggerUtil.log("Unauthorized block/unblock attempt");
             return ResponseEntity.status(403).body("Access denied");

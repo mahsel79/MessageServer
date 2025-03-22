@@ -20,9 +20,16 @@ public class MessageController {
     private MessageService messageService;
 
     /** Get messages for logged-in user */
+    private final JwtUtil jwtUtil;
+
+    @Autowired
+    public MessageController(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
+
     @GetMapping
     public ResponseEntity<List<Message>> getMessages(@RequestHeader("Authorization") String token) {
-        Claims claims = JwtUtil.validateToken(token);
+        Claims claims = jwtUtil.validateToken(token);
         if (claims == null) {
             LoggerUtil.log("Unauthorized attempt to retrieve messages.");
             return ResponseEntity.status(401).body(null);
@@ -37,7 +44,7 @@ public class MessageController {
     public ResponseEntity<String> sendMessage(@RequestHeader("Authorization") String token,
                                               @RequestParam String recipient,
                                               @RequestParam String message) {
-        Claims claims = JwtUtil.validateToken(token);
+        Claims claims = jwtUtil.validateToken(token);
         if (claims == null) {
             LoggerUtil.log("Unauthorized attempt to send message.");
             return ResponseEntity.status(401).body("Invalid or expired token");

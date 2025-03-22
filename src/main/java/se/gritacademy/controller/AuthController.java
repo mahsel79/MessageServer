@@ -4,7 +4,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import se.gritacademy.util.LoggerUtil;
 import se.gritacademy.model.UserInfo;
+import se.gritacademy.model.LoginRequest;
 import se.gritacademy.service.UserService;
+import se.gritacademy.util.JwtUtil;
+import java.util.Optional;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -14,27 +17,40 @@ import jakarta.servlet.http.HttpServletRequest;
 public class AuthController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(
-            @RequestParam String username,
-            @RequestParam String password,
+    public ResponseEntity<?> login(
+            @RequestBody LoginRequest loginRequest,
             HttpServletRequest request) {
         
-        String ipAddress = getClientIp(request);
-        
-        boolean loginSuccess = userService.authenticateUser(username, password).isPresent();
-        
-        if (loginSuccess) {
-            LoggerUtil.logSuccessfulLogin(username, ipAddress);
-            return ResponseEntity.ok("Login successful");
-        } else {
-            LoggerUtil.logFailedLogin(username, ipAddress);
-            return ResponseEntity.badRequest().body("Invalid credentials");
+        try {
+            String email = loginRequest.getEmail();
+            String password = loginRequest.getPassword();
+            
+            if (email == null || password == null) {
+                return ResponseEntity.badRequest().body("Email and password are required");
+            }
+            
+            String ipAddress = getClientIp(request);
+            
+            Optional<UserInfo> user = userService.authenticateUser(email, password);
+            if (user.isPresent()) {
+                LoggerUtil.logSuccessfulLogin(email, ipAddress);
+                String token = jwtUtil.generateToken(email);
+                return ResponseEntity.ok(token);
+            } else {
+                LoggerUtil.logFailedLogin(email, ipAddress);
+                return ResponseEntity.status(401).body("Invalid email or password");
+            }
+        } catch (Exception e) {
+            LoggerUtil.log("Login error: " + e.getMessage());
+            return ResponseEntity.status(500).body("An error occurred during login");
         }
     }
 

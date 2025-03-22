@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 import se.gritacademy.model.Message;
 import se.gritacademy.repository.MessageRepository;
 import se.gritacademy.util.EncryptionUtil;
+import se.gritacademy.util.LoggerUtil;
 import java.util.Date;
 import java.util.List;
+
 
 @Service
 public class MessageService {
@@ -23,11 +25,20 @@ public class MessageService {
 
     /** Encrypt message before saving */
     public void sendMessage(String sender, String receiver, String content) {
-        Message message = new Message();
-        message.setSender(sender);
-        message.setRecipient(receiver);
-        message.setMessage(EncryptionUtil.encrypt(content));  // Encrypt content
-        message.setTimestamp(new Date());
-        messageRepository.save(message);
+        try {
+            LoggerUtil.log("Attempting to send message from " + sender + " to " + receiver);
+            Message message = new Message();
+            message.setSender(sender);
+            message.setRecipient(receiver);
+            String encryptedMessage = EncryptionUtil.encrypt(content);
+            LoggerUtil.log("Message encrypted successfully");
+            message.setMessage(encryptedMessage);
+            message.setTimestamp(new Date());
+            messageRepository.save(message);
+            LoggerUtil.log("Message saved successfully");
+        } catch (Exception e) {
+            LoggerUtil.log("Error sending message: " + e.getMessage());
+            throw new RuntimeException("Failed to send message", e);
+        }
     }
 }

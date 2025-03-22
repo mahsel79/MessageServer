@@ -17,9 +17,16 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    private final JwtUtil jwtUtil;
+
+    @Autowired
+    public UserController(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
+
     @GetMapping
     public ResponseEntity<List<String>> getAllUsers(@RequestHeader("Authorization") String token) {
-        Claims claims = JwtUtil.validateToken(token);
+        Claims claims = jwtUtil.validateToken(token);
         if (claims == null) {
             return ResponseEntity.status(401).body(null);
         }

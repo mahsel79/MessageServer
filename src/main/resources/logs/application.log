@@ -1,0 +1,64 @@
+[INFO] 2025-03-21 12:19:43 - New user registered: test@example.com
+[INFO] 2025-03-21 12:26:35 - New user registered: test@example.com
+[INFO] 2025-03-21 12:26:42 - Failed login attempt for email: null
+[WARN] 2025-03-21 12:26:42 - Failed login attempt from IP: 0:0:0:0:0:0:0:1
+[INFO] 2025-03-21 12:30:07 - New user registered: test@example.com
+[INFO] 2025-03-21 12:30:12 - Successful login for user: test@example.com
+[INFO] 2025-03-21 12:30:12 - Successful login from IP: 0:0:0:0:0:0:0:1
+[INFO] 2025-03-21 12:34:51 - New user registered: test@example.com
+[INFO] 2025-03-21 12:34:54 - Successful login for user: test@example.com
+[INFO] 2025-03-21 12:34:54 - Successful login from IP: 0:0:0:0:0:0:0:1
+[INFO] 2025-03-21 12:40:50 - New user registered: test@example.com
+[INFO] 2025-03-21 12:40:54 - Successful login for user: test@example.com
+[INFO] 2025-03-21 12:40:54 - Successful login from IP: 0:0:0:0:0:0:0:1
+[INFO] 2025-03-21 12:43:24 - New user registered: test@example.com
+[INFO] 2025-03-21 12:43:27 - Successful login for user: test@example.com
+[INFO] 2025-03-21 12:43:27 - Successful login from IP: 0:0:0:0:0:0:0:1
+[INFO] 2025-03-21 12:43:28 - Login error: The specified key byte array is 160 bits which is not secure enough for any JWT HMAC-SHA algorithm.  The JWT JWA Specification (RFC 7518, Section 3.2) states that keys used with HMAC-SHA algorithms MUST have a size >= 256 bits (the key size must be greater than or equal to the hash output size).  Consider using the io.jsonwebtoken.security.Keys#secretKeyFor(SignatureAlgorithm) method to create a key guaranteed to be secure enough for your preferred HMAC-SHA algorithm.  See https://tools.ietf.org/html/rfc7518#section-3.2 for more information.
+[INFO] 2025-03-21 12:43:34 - Successful login for user: test@example.com
+[INFO] 2025-03-21 12:43:34 - Successful login from IP: 0:0:0:0:0:0:0:1
+[INFO] 2025-03-21 12:43:34 - Login error: The specified key byte array is 160 bits which is not secure enough for any JWT HMAC-SHA algorithm.  The JWT JWA Specification (RFC 7518, Section 3.2) states that keys used with HMAC-SHA algorithms MUST have a size >= 256 bits (the key size must be greater than or equal to the hash output size).  Consider using the io.jsonwebtoken.security.Keys#secretKeyFor(SignatureAlgorithm) method to create a key guaranteed to be secure enough for your preferred HMAC-SHA algorithm.  See https://tools.ietf.org/html/rfc7518#section-3.2 for more information.
+[INFO] 2025-03-21 12:46:32 - New user registered: test@example.com
+[INFO] 2025-03-21 12:46:34 - Successful login for user: test@example.com
+[INFO] 2025-03-21 12:46:34 - Successful login from IP: 0:0:0:0:0:0:0:1
+[INFO] 2025-03-21 12:56:04 - New user registered: test@example.com
+[INFO] 2025-03-21 12:56:12 - Successful login for user: test@example.com
+[INFO] 2025-03-21 12:56:12 - Successful login from IP: 0:0:0:0:0:0:0:1
+[INFO] 2025-03-22 13:39:18 - New user registered: test@example.com
+[INFO] 2025-03-22 13:39:23 - Successful login for user: test@example.com
+[INFO] 2025-03-22 13:39:23 - Successful login from IP: 0:0:0:0:0:0:0:1
+[INFO] 2025-03-22 13:45:20 - New user registered: test@example.com
+[INFO] 2025-03-22 13:45:38 - Successful login for user: test@example.com
+[INFO] 2025-03-22 13:45:38 - Successful login from IP: 0:0:0:0:0:0:0:1
+[INFO] 2025-03-22 13:52:52 - New user registered: test@example.com
+[INFO] 2025-03-22 13:52:57 - Successful login for user: test@example.com
+[INFO] 2025-03-22 13:52:57 - Successful login from IP: 0:0:0:0:0:0:0:1
+[INFO] 2025-03-22 13:53:29 - Attempting to send message from test@example.com to test@example.com
+[INFO] 2025-03-22 13:53:29 - Error sending message: Error while encrypting
+[INFO] 2025-03-22 13:56:30 - New user registered: test@example.com
+[INFO] 2025-03-22 13:56:38 - Successful login for user: test@example.com
+[INFO] 2025-03-22 13:56:38 - Successful login from IP: 0:0:0:0:0:0:0:1
+[INFO] 2025-03-22 13:57:29 - Attempting to send message from test@example.com to test@example.com
+[INFO] 2025-03-22 13:57:29 - Error sending message: Error while encrypting
+[INFO] 2025-03-22 14:06:21 - New user registered: test@example.com
+[INFO] 2025-03-22 14:06:30 - Successful login for user: test@example.com
+[INFO] 2025-03-22 14:06:30 - Successful login from IP: 0:0:0:0:0:0:0:1
+[INFO] 2025-03-22 14:08:04 - Attempting to send message from test@example.com to test@example.com
+[INFO] 2025-03-22 14:08:04 - Error sending message: Error while encrypting
+[INFO] 2025-03-22 14:09:04 - Attempting to send message from test@example.com to test@example.com
+[INFO] 2025-03-22 14:09:04 - Error sending message: Error while encrypting
+[INFO] 2025-03-22 14:12:45 - New user registered: test@example.com
+[INFO] 2025-03-22 14:12:49 - Successful login for user: test@example.com
+[INFO] 2025-03-22 14:12:49 - Successful login from IP: 0:0:0:0:0:0:0:1
+[INFO] 2025-03-22 14:13:13 - Attempting to send message from test@example.com to test@example.com
+[INFO] 2025-03-22 14:19:31 - Attempting to send message from test@example.com to test@example.com
+[INFO] 2025-03-22 14:19:31 - Message encrypted successfully
+[INFO] 2025-03-22 14:19:32 - Message saved successfully
+[INFO] 2025-03-22 14:19:32 - User test@example.com sent a message to test@example.com
+[INFO] 2025-03-22 14:20:23 - New user registered: test@example.com
+[INFO] 2025-03-22 14:20:39 - Successful login for user: test@example.com
+[INFO] 2025-03-22 14:20:39 - Successful login from IP: 0:0:0:0:0:0:0:1
+[INFO] 2025-03-22 14:21:01 - Attempting to send message from test@example.com to test@example.com
+[INFO] 2025-03-22 14:21:02 - Message encrypted successfully
+[INFO] 2025-03-22 14:21:02 - Message saved successfully
+[INFO] 2025-03-22 14:21:02 - User test@example.com sent a message to test@example.com
