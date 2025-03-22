@@ -62,3 +62,6 @@
 [INFO] 2025-03-22 14:21:02 - Message encrypted successfully
 [INFO] 2025-03-22 14:21:02 - Message saved successfully
 [INFO] 2025-03-22 14:21:02 - User test@example.com sent a message to test@example.com
+[INFO] 2025-03-22 14:31:49 - New user registered: admin@example.com
+[INFO] 2025-03-22 14:31:57 - Successful login for user: admin@example.com
+[INFO] 2025-03-22 14:31:57 - Successful login from IP: 0:0:0:0:0:0:0:1
